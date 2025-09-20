@@ -51,6 +51,29 @@ export const useStockManager = () => {
     return newCategory;
   };
 
+  const updateCategory = async (categoryId: string, name: string): Promise<void> => {
+    const updatedCategories = categories.map(category =>
+      category.id === categoryId ? { ...category, name } : category
+    );
+    setCategories(updatedCategories);
+    await storage.saveCategories(updatedCategories);
+  };
+
+  const removeCategory = async (categoryId: string): Promise<void> => {
+    // First, remove all subcategories associated with this category
+    const subcategoriesToRemove = subcategories.filter(sub => sub.categoryId === categoryId);
+    
+    // Remove all products associated with subcategories of this category
+    for (const subcategory of subcategoriesToRemove) {
+      await removeSubcategory(subcategory.id);
+    }
+
+    // Remove the category
+    const updatedCategories = categories.filter(category => category.id !== categoryId);
+    setCategories(updatedCategories);
+    await storage.saveCategories(updatedCategories);
+  };
+
   // Subcategories
   const addSubcategory = async (name: string, categoryId: string): Promise<Subcategory> => {
     const newSubcategory: Subcategory = {
@@ -64,6 +87,41 @@ export const useStockManager = () => {
     setSubcategories(updatedSubcategories);
     await storage.saveSubcategories(updatedSubcategories);
     return newSubcategory;
+  };
+
+  const updateSubcategory = async (subcategoryId: string, name: string): Promise<void> => {
+    const updatedSubcategories = subcategories.map(subcategory =>
+      subcategory.id === subcategoryId ? { ...subcategory, name } : subcategory
+    );
+    setSubcategories(updatedSubcategories);
+    await storage.saveSubcategories(updatedSubcategories);
+  };
+
+  const removeSubcategory = async (subcategoryId: string): Promise<void> => {
+    // Remove all products associated with this subcategory
+    const productsToRemove = products.filter(product => product.subcategoryId === subcategoryId);
+    const updatedProducts = products.filter(product => product.subcategoryId !== subcategoryId);
+    
+    // Remove stock movements for deleted products
+    const productIdsToRemove = productsToRemove.map(p => p.id);
+    const updatedMovements = stockMovements.filter(movement => 
+      !productIdsToRemove.includes(movement.productId)
+    );
+
+    // Update state
+    setProducts(updatedProducts);
+    setStockMovements(updatedMovements);
+    
+    // Remove the subcategory
+    const updatedSubcategories = subcategories.filter(subcategory => subcategory.id !== subcategoryId);
+    setSubcategories(updatedSubcategories);
+
+    // Save to storage
+    await Promise.all([
+      storage.saveProducts(updatedProducts),
+      storage.saveStockMovements(updatedMovements),
+      storage.saveSubcategories(updatedSubcategories),
+    ]);
   };
 
   const getSubcategoriesByCategory = (categoryId: string): Subcategory[] => {
@@ -194,7 +252,11 @@ export const useStockManager = () => {
     stockMovements,
     loading,
     addCategory,
+    updateCategory,
+    removeCategory,
     addSubcategory,
+    updateSubcategory,
+    removeSubcategory,
     getSubcategoriesByCategory,
     addProduct,
     updateProductQuantity,

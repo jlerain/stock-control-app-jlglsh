@@ -8,6 +8,7 @@ import { Product, SearchResult } from '../types';
 import Scanner from '../components/Scanner';
 import ProductActionSheet from '../components/ProductActionSheet';
 import CreateProductSheet from '../components/CreateProductSheet';
+import CategoryManagementSheet from '../components/CategoryManagementSheet';
 import Icon from '../components/Icon';
 
 export default function MainScreen() {
@@ -17,6 +18,7 @@ export default function MainScreen() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showProductActions, setShowProductActions] = useState(false);
   const [showCreateProduct, setShowCreateProduct] = useState(false);
+  const [showCategoryManagement, setShowCategoryManagement] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState('');
 
   const {
@@ -25,7 +27,11 @@ export default function MainScreen() {
     products,
     loading,
     addCategory,
+    updateCategory,
+    removeCategory,
     addSubcategory,
+    updateSubcategory,
+    removeSubcategory,
     addProduct,
     updateProductQuantity,
     getProductByBarcode,
@@ -194,11 +200,11 @@ export default function MainScreen() {
 
   const renderCategoriesView = () => (
     <View style={commonStyles.content}>
-      {/* Header with Logo */}
+      {/* Header with Logo and Management Button */}
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         marginBottom: 20,
         paddingTop: 20
       }}>
@@ -210,6 +216,20 @@ export default function MainScreen() {
             resizeMode: 'contain'
           }}
         />
+        <TouchableOpacity
+          onPress={() => setShowCategoryManagement(true)}
+          style={{
+            backgroundColor: colors.primary,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 8,
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <Icon name="settings" size={16} color="white" style={{ marginRight: 4 }} />
+          <Text style={{ color: 'white', fontSize: 14, fontWeight: '600' }}>Gérer</Text>
+        </TouchableOpacity>
       </View>
       
       <Text style={commonStyles.title}>Catégories</Text>
@@ -220,20 +240,44 @@ export default function MainScreen() {
           return (
             <View key={category.id} style={commonStyles.card}>
               <Text style={commonStyles.subtitle}>{category.name}</Text>
-              {categorySubcategories.map(subcategory => {
-                const subcategoryProducts = getProductsBySubcategory(subcategory.id);
-                return (
-                  <View key={subcategory.id} style={{ marginLeft: 10, marginTop: 10 }}>
-                    <Text style={commonStyles.text}>{subcategory.name}</Text>
-                    <Text style={commonStyles.textSecondary}>
-                      {subcategoryProducts.length} produit(s)
-                    </Text>
-                  </View>
-                );
-              })}
+              {categorySubcategories.length === 0 ? (
+                <Text style={commonStyles.textSecondary}>Aucune sous-catégorie</Text>
+              ) : (
+                categorySubcategories.map(subcategory => {
+                  const subcategoryProducts = getProductsBySubcategory(subcategory.id);
+                  return (
+                    <TouchableOpacity
+                      key={subcategory.id}
+                      style={{ 
+                        marginLeft: 10, 
+                        marginTop: 10,
+                        padding: 8,
+                        backgroundColor: colors.backgroundAlt,
+                        borderRadius: 6
+                      }}
+                      onPress={() => {
+                        // Navigate to subcategory products view
+                        console.log('Navigate to subcategory:', subcategory.name);
+                      }}
+                    >
+                      <Text style={commonStyles.text}>{subcategory.name}</Text>
+                      <Text style={commonStyles.textSecondary}>
+                        {subcategoryProducts.length} produit(s)
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })
+              )}
             </View>
           );
         })}
+
+        {categories.length === 0 && (
+          <View style={[commonStyles.card, commonStyles.centerContent]}>
+            <Text style={commonStyles.textSecondary}>Aucune catégorie créée</Text>
+            <Text style={commonStyles.textSecondary}>Appuyez sur "Gérer" pour commencer</Text>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -317,6 +361,19 @@ export default function MainScreen() {
         onCreateProduct={handleCreateProduct}
         onCreateCategory={addCategory}
         onCreateSubcategory={addSubcategory}
+      />
+
+      <CategoryManagementSheet
+        isVisible={showCategoryManagement}
+        onClose={() => setShowCategoryManagement(false)}
+        categories={categories}
+        subcategories={subcategories}
+        onAddCategory={addCategory}
+        onUpdateCategory={updateCategory}
+        onRemoveCategory={removeCategory}
+        onAddSubcategory={addSubcategory}
+        onUpdateSubcategory={updateSubcategory}
+        onRemoveSubcategory={removeSubcategory}
       />
     </SafeAreaView>
   );
