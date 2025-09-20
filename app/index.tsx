@@ -9,6 +9,7 @@ import Scanner from '../components/Scanner';
 import ProductActionSheet from '../components/ProductActionSheet';
 import CreateProductSheet from '../components/CreateProductSheet';
 import CategoryManagementSheet from '../components/CategoryManagementSheet';
+import ProductsTable from '../components/ProductsTable';
 import Icon from '../components/Icon';
 
 export default function MainScreen() {
@@ -119,7 +120,7 @@ export default function MainScreen() {
   }
 
   const renderHomeView = () => (
-    <View style={commonStyles.content}>
+    <ScrollView style={commonStyles.content} showsVerticalScrollIndicator={false}>
       {/* Header with Logo */}
       <View style={{
         flexDirection: 'row',
@@ -195,7 +196,14 @@ export default function MainScreen() {
           ))}
         </ScrollView>
       </View>
-    </View>
+
+      {/* Products Table Section */}
+      <ProductsTable
+        products={products}
+        categories={categories}
+        subcategories={subcategories}
+      />
+    </ScrollView>
   );
 
   const renderCategoriesView = () => (
