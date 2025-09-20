@@ -1,34 +1,35 @@
+
 {
   "expo": {
-    "name": "Natively",
-    "slug": "Natively",
+    "name": "Lexo - Stock Management",
+    "slug": "lexo-stock-management",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/natively-dark.png",
-    "userInterfaceStyle": "dark",
+    "icon": "./assets/images/54f7086c-261a-4bd1-854e-d2de42aaed29.png",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/natively-dark.png",
+      "image": "./assets/images/54f7086c-261a-4bd1-854e-d2de42aaed29.png",
       "resizeMode": "contain",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#f5f5f5"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.Natively",
+      "bundleIdentifier": "com.lexo.stockmanagement",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/natively-dark.png",
-        "backgroundColor": "#000000"
+        "foregroundImage": "./assets/images/54f7086c-261a-4bd1-854e-d2de42aaed29.png",
+        "backgroundColor": "#f5f5f5"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.Natively"
+      "package": "com.lexo.stockmanagement"
     },
     "web": {
-      "favicon": "./assets/images/final_quest_240x240.png",
+      "favicon": "./assets/images/54f7086c-261a-4bd1-854e-d2de42aaed29.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -36,7 +37,7 @@
       "expo-router",
       "expo-web-browser"
     ],
-    "scheme": "natively",
+    "scheme": "lexo",
     "experiments": {
       "typedRoutes": true
     },

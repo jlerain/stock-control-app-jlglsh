@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { commonStyles, colors } from '../styles/commonStyles';
 import { useStockManager } from '../hooks/useStockManager';
@@ -114,7 +114,23 @@ export default function MainScreen() {
 
   const renderHomeView = () => (
     <View style={commonStyles.content}>
-      <Text style={commonStyles.title}>Gestion de Stock</Text>
+      {/* Header with Logo */}
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 30,
+        paddingTop: 20
+      }}>
+        <Image
+          source={require('../assets/images/54f7086c-261a-4bd1-854e-d2de42aaed29.png')}
+          style={{
+            width: 120,
+            height: 40,
+            resizeMode: 'contain'
+          }}
+        />
+      </View>
       
       <TextInput
         style={commonStyles.searchInput}
@@ -178,6 +194,24 @@ export default function MainScreen() {
 
   const renderCategoriesView = () => (
     <View style={commonStyles.content}>
+      {/* Header with Logo */}
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 20,
+        paddingTop: 20
+      }}>
+        <Image
+          source={require('../assets/images/54f7086c-261a-4bd1-854e-d2de42aaed29.png')}
+          style={{
+            width: 120,
+            height: 40,
+            resizeMode: 'contain'
+          }}
+        />
+      </View>
+      
       <Text style={commonStyles.title}>Catégories</Text>
       
       <ScrollView>
